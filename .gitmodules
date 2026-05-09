@@ -1,15 +1,15 @@
 [submodule "combat_rm_interfaces"]
 	path = combat_rm_interfaces
-	url = git@github.com:Combat-Algorithm-Team/combat_rm_interfaces.git
+	url = https://github.com/Combat-Algorithm-Team/combat_rm_interfaces.git
 [submodule "standard_robot_pp_ros2"]
 	path = standard_robot_pp_ros2
-	url = git@github.com:Combat-Algorithm-Team/standard_robot_pp_ros2.git
+	url = https://github.com/Combat-Algorithm-Team/standard_robot_pp_ros2.git
 [submodule "combat_sentry_nav"]
 	path = combat_sentry_nav
-	url = git@github.com:Combat-Algorithm-Team/combat_sentry_nav.git
+	url = https://github.com/Combat-Algorithm-Team/combat_sentry_nav.git
 [submodule "combat_sentry_behavior/BehaviorTree.ROS2"]
 	path = combat_sentry_behavior/BehaviorTree.ROS2
-	url = git@github.com:Combat-Algorithm-Team/BehaviorTree.ROS2.git
+	url = https://github.com/Combat-Algorithm-Team/BehaviorTree.ROS2.git
 [submodule "combat_sentry_behavior/combat_sentry_behavior"]
 	path = combat_sentry_behavior/combat_sentry_behavior
-	url = git@github.com:Combat-Algorithm-Team/combat_sentry_behavior.git
+	url = https://github.com/Combat-Algorithm-Team/combat_sentry_behavior.git
