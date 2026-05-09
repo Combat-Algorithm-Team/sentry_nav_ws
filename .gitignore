@@ -1,0 +1,18 @@
+.DS_Store
+*.swp
+*.swo
+*~
+
+# ROS 2 / colcon generated output
+/build/
+/install/
+/log/
+/.colcon/
+
+# Python and test caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local editor state
+/.idea/
