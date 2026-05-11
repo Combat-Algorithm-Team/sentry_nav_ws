@@ -1,0 +1,37 @@
+root@sentry-NUC:~/Combat_Sentry2026/sentry_nav_ws# ros2 launch pb2025_nav_bringup point_cloud_deskew_launch.py
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-05-11-17-56-51-012636-sentry-NUC-6027
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [robot_state_publisher-1]: process started with pid [6029]
+[INFO] [joint_state_publisher-2]: process started with pid [6031]
+[INFO] [livox_ros_driver2_node-3]: process started with pid [6033]
+[INFO] [sentry_fusion_node-4]: process started with pid [6035]
+[INFO] [odom_adapter_node-5]: process started with pid [6037]
+[livox_ros_driver2_node-3] [INFO] [1778522211.301486283] [livox_ros_driver2]: Livox Ros Driver2 Version: 1.2.4
+[livox_ros_driver2_node-3] [INFO] [1778522211.301867127] [livox_ros_driver2]: Data Source is raw lidar.
+[livox_ros_driver2_node-3] [INFO] [1778522211.301881613] [livox_ros_driver2]: Config file : /root/Combat_Sentry2026/sentry_nav_ws/install/pb2025_nav_bringup/share/pb2025_nav_bringup/config/reality/mid360_user_config.json
+[livox_ros_driver2_node-3] LdsLidar *GetInstance
+[livox_ros_driver2_node-3] config lidar type: 8
+[livox_ros_driver2_node-3] successfully parse base config, counts: 1
+[odom_adapter_node-5] terminate called after throwing an instance of 'rclcpp::exceptions::ParameterAlreadyDeclaredException'
+[odom_adapter_node-5]   what():  parameter 'use_sim_time' has already been declared
+[robot_state_publisher-1] [INFO] [1778522211.304743458] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-1] [INFO] [1778522211.305933856] [robot_state_publisher]: got segment base_yaw
+[robot_state_publisher-1] [INFO] [1778522211.305945381] [robot_state_publisher]: got segment base_yaw_odom
+[robot_state_publisher-1] [INFO] [1778522211.305950758] [robot_state_publisher]: got segment chassis
+[robot_state_publisher-1] [INFO] [1778522211.305955824] [robot_state_publisher]: got segment front_mid360
+[robot_state_publisher-1] [INFO] [1778522211.305960965] [robot_state_publisher]: got segment gimbal_pitch
+[robot_state_publisher-1] [INFO] [1778522211.305964118] [robot_state_publisher]: got segment gimbal_yaw                                                       [robot_state_publisher-1] [INFO] [1778522211.305967157] [robot_state_publisher]: got segment odin1_base_link
+[livox_ros_driver2_node-3] [INFO] [1778522211.307949415] [livox_ros_driver2]: Init lds lidar success!
+[sentry_fusion_node-4] [INFO] [1778522211.318136620] [point_cloud_deskew]: Deskew and fuse Livox 'livox/lidar/pointcloud' with Odin cloud 'odin1/cloud_slam' into 'registered_scan'. Odometry: 'odin1/odometry_highfreq'.                    [ERROR] [odom_adapter_node-5]: process has died [pid 6037, exit code -6, cmd '/root/Combat_Sentry2026/sentry_nav_ws/install/sentry_fusion/lib/sentry_fusion/odom_adapter_node --ros-args --log-level info --ros-args -r __node:=odom_adapter -r __ns:=/ --params-file /tmp/launch_params_fagix24_ -r /tf:=tf -r /tf_static:=tf_static'].                                                                   [joint_state_publisher-2] [INFO] [1778522211.462351819] [joint_state_publisher]: Waiting for robot_description to be published on the robot_description topic...                                                                             [livox_ros_driver2_node-3] GetFreeIndex key:livox_lidar_1828825280.            [livox_ros_driver2_node-3] extrinsic rpy 0 0 0
+[livox_ros_driver2_node-3] Init queue, real query size:32.
+[livox_ros_driver2_node-3] Lidar[0] storage queue size: 21                     [livox_ros_driver2_node-3] set pcl data type, handle: 1828825280, data type: 1
+[livox_ros_driver2_node-3] set scan pattern, handle: 1828825280, scan pattern: 0
+[livox_ros_driver2_node-3] begin to change work mode to 'Normal', handle: 1828825280
+[livox_ros_driver2_node-3] successfully set data type, handle: 1828825280, set_bit: 2                                                                         [livox_ros_driver2_node-3] successfully set pattern mode, handle: 1828825280, set_bit: 0
+[livox_ros_driver2_node-3] successfully set lidar attitude, ip: 192.168.1.109  [livox_ros_driver2_node-3] successfully change work mode, handle: 1828825280
+[livox_ros_driver2_node-3] successfully enable Livox Lidar imu, ip: 192.168.1.109
+[livox_ros_driver2_node-3] [INFO] [1778522214.309708350] [livox_ros_driver2]: livox/imu publish use imu format
+[livox_ros_driver2_node-3] [INFO] [1778522214.315539212] [livox_ros_driver2]: livox/lidar publish use pointcloud2 and custom format
+[sentry_fusion_node-4] [WARN] [1778522214.316305892] [point_cloud_deskew]: Drop cloud: scan end time 1778522211.362610 is outside the odometry cache.
+[sentry_fusion_node-4] [WARN] [1778522214.351817649] [point_cloud_deskew]: Drop cloud: point time 1778522212.262099 is outside the odometry cache.
+[sentry_fusion_node-4] [WARN] [1778522225.002747079] [point_cloud_deskew]: New subscription discovered on topic '/registered_scan', requesting incompatible QoS. No messages will be sent to it. Last incompatible policy: RELIABILITY_QOS_POLICY
