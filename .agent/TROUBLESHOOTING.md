@@ -26,6 +26,8 @@
   - `map -> odom -> base_footprint/base_yaw/base_yaw_odom` TF 是否连通。
   - 点云 header stamp 与 TF buffer 时间是否匹配。
   - message filter 是否因 TF 超时或 QoS 不匹配丢消息。
+- `point_cloud_deskew` 连续打印 `Drop cloud: ... outside the odometry cache` 时，先确认 `odin1/odometry_highfreq` 正在发布且时间戳覆盖 Livox 点云时间段；实车高频里程计可能轻微滞后，`max_extrapolation_sec` 和 `max_odom_gap_sec` 不能设得过窄。
+- RViz 报 `/livox/lidar_deskewed` 的 `RELIABILITY_QOS_POLICY` 不兼容时，说明发布端/订阅端可靠性策略不匹配；deskew 输出应使用 reliable QoS，或 RViz 显示项改成 Best Effort。
 
 ## 地图与 PCD
 
@@ -39,6 +41,7 @@
 - 如果低矮障碍漏检，检查输出点云的 `intensity` 高度编码，以及 `IntensityVoxelLayer` 的 `min_obstacle_intensity` / `max_obstacle_intensity`。
 - 如果动态物体走过后留下不可通行区域，检查 `clearDyObs`、decay time、clearing distance 和 costmap rolling window。
 - 如果隧道/飞坡/起伏路段表现不稳定，不要只调全局 planner；这些地形可能需要限速、局部行为或 BT 专用节点。
+- `semantic_terrain_layer_test_launch.py` 报 `pb_nav2_plugins/costmap_plugins.xml has no Root Element`，并且 `combat_nav2_plugins` 加载时指向 `install/pb_nav2_plugins/lib/liblayers.so` 的 `undefined symbol`，通常是旧 `pb_nav2_plugins` 安装残留污染了插件索引和 `LD_LIBRARY_PATH`。删除 `build/pb_nav2_plugins install/pb_nav2_plugins`，再重建 `combat_nav2_plugins pb2025_nav_bringup`。
 
 ## Git 边界
 
