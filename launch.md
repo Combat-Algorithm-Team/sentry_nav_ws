@@ -25,6 +25,12 @@ ros2 launch standard_robot_pp_ros2 standard_robot_pp_ros2.launch.py
 ros2 launch pb2025_nav_bringup odin1_ros2.launch.py
 ```
 
+## 启动 Odin 链路建图
+
+```bash
+ros2 launch pb2025_nav_bringup odin_slam_launch.py
+```
+
 ## 启动导航
 
 ```bash
