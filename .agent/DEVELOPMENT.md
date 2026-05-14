@@ -86,6 +86,13 @@ ros2 launch pb2025_nav_bringup rm_navigation_reality_launch.py \
   slam:=False
 ```
 
+Odin 重定位未定上时启用静态 `map -> odom` 兜底：
+
+```bash
+ros2 launch pb2025_nav_bringup rm_navigation_reality_launch.py \
+  publish_static_map_to_odom_tf:=True
+```
+
 建图模式：
 
 ```bash
