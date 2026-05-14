@@ -1,59 +1,43 @@
 # TODO / Current State
 
-本文件记录 `sentry_nav_ws` 的当前状态和待办。完成工作后如状态变化，请同步更新。
+本文件只记录当前工作区状态、真实缺口和下一步优先事项。稳定流程放在 `DEVELOPMENT.md`，长期架构知识放在 `KNOWLEDGE.md`，排障经验放在 `TROUBLESHOOTING.md`。
 
-## 当前状态
+## 当前事实
 
-- 运行环境按 Ubuntu 22.04 + ROS 2 Humble 处理。
-- 常用容器为 `Combat_Sentry2026`，宿主机 `sentry_nav_ws` 通常挂载到容器内 `/root/Combat_Sentry2026/sentry_nav_ws/src`。
-- `sentry_nav_ws` 是多包 ROS2 工作区，同时包含多个嵌套 git 仓库；提交前必须确认真实仓库边界。
-- 当前导航主要围绕 `combat_sentry_nav/pb2025_nav_bringup`、`terrain_analysis`、`terrain_analysis_ext`、`loam_interface`、`sensor_scan_generation`、`cmd_vel_transform` 等包。
-- RoboMaster 2026 规则 PDF 已复制到 `.agent/rules/`，场地/地形语义已整理到 `.agent/KNOWLEDGE.md`，后续应结合实际地图、点云和规则更新继续修正。
+- 运行环境按 Ubuntu 22.04 + ROS 2 Humble 处理；宿主机是 Apple Silicon macOS，ROS 构建和运行优先在 Docker 容器里完成。
+- 默认容器名为 `Combat_Sentry2026`，宿主机 `sentry_nav_ws` 通常挂载到容器内 `/root/Combat_Sentry2026/sentry_nav_ws/src`。
+- `sentry_nav_ws` 是外层工作区和 git 仓库，内部包含多个嵌套 git 仓库；提交或 push 前必须先确认真实 git root。
+- 当前导航主仓库是 `combat_sentry_nav`，主要链路围绕 `pb2025_nav_bringup`、`sentry_fusion`、`terrain_analysis`、`terrain_analysis_ext`、`pointcloud_to_laserscan`、`combat_nav2_plugins`、`cmd_vel_transform`、`pb_omni_pid_pursuit_controller` 等包。
+- 实车入口是 `combat_sentry_nav/pb2025_nav_bringup/launch/rm_navigation_reality_launch.py`。
+- `rm_navigation_reality_launch.py` 默认 `world:=rmuc2026`，但 UC 2026 地图尚未建立；运行 RMUL 2026 地图时需要显式传 `world:=rmul2026`。
+- RMUL 2026 栅格地图为 `combat_sentry_nav/pb2025_nav_bringup/map/reality/rmul2026.pgm/.yaml`；旧的 `rmul_2026_r.xcf` 已删除，不要恢复。
+- `rmul2026.yaml` 当前 `origin` 暂为 `[0.0, 0.0, 0.0]`，需要结合实车重定位、先验 PCD 和 RViz 对齐后再定稿。
+- Odin 重定位可能定不上时，可用 `publish_static_map_to_odom_tf:=True` 临时发布静态 `map -> odom` 兜底；默认关闭，避免 Odin 正常重定位时重复发布同一条 TF。
+- 静态语义地形层已经接入实车 Nav2 参数，区域配置在 `pb2025_nav_bringup/config/reality/terrain_semantic_zones.yaml`。
 
-## 已知缺口
+## 当前已知缺口
 
-- 2026 规则语义目前是从本地 V1.4.2 PDF 梳理得到；若官方规则文件更新，需要重新核对。
-- `pb2025_nav_bringup/map/reality/` 中已从旧的 `rmul_2026_r.xcf` 导出 `rmul2026.pgm/.yaml`；YAML 当前 origin 暂为 `[0.0, 0.0, 0.0]`，仍需结合实车定位或 RViz 标定确认。
-- 飞坡、隧道、起伏路段、陡坡高地等地形建议继续沉淀为独立导航语义层或行为树动作，而不是只依赖二维占据栅格。
-- 真机运行、RViz、TF、点云质量、增益点检测等仍需要结合容器和实车现场验证。
+- UC 2026 的 `rmuc2026.pgm/.yaml` 尚未建立，默认 `world:=rmuc2026` 不能视为可直接运行的地图导航路径。
+- RMUL 2026 地图的 `origin`、先验 PCD、Odin 重定位坐标系之间的关系还没有完成实车标定。
+- `pcd/reality/` 目前没有可用先验 PCD，重定位相关运行需要现场补齐或显式配置。
+- 语义地形多边形仍需要用 RViz 对齐真实地图，不能只凭模板坐标投入下位机限速。
+- 飞坡、隧道、起伏路段、43 度坡等区域仍需要沉淀为可维护的语义地图、限速策略或专门行为。
+- 真机联调还需要重点验证 TF 连通、点云时间戳、Livox/Odin 点云融合质量、Nav2 costmap 更新和下位机速度保护。
 
-## 后续优先事项
+## 下一步优先事项
 
-- 将 2026 场地规则语义映射为可维护的地图/代价/禁区/增益点配置。
-- 明确 `rmul2026` 的 YAML origin、先验 PCD 与实车重定位坐标系之间的关系。
-- 为飞坡、隧道、起伏路段建立专门通过策略或至少限速/高代价策略。
-- 对 `terrain_analysis` 与 `IntensityVoxelLayer` 的参数做坡面、凸起、低矮障碍的实测标定。
+- 建立并验证 `rmuc2026.pgm/.yaml`，让默认 `world:=rmuc2026` 成为可运行路径。
+- 标定 `rmul2026.yaml` 的 `origin`，并与先验 PCD / Odin 重定位输出统一。
+- 补齐 `pcd/reality/` 中与 `world` 对应的先验 PCD 或明确当前运行不依赖 PCD 的模式。
+- 用 RViz 校准 `terrain_semantic_zones.yaml`，确保堡垒、高地、43 度坡、禁区和限速区贴合实际地图。
+- 实测 `publish_static_map_to_odom_tf:=True` 只作为 Odin 重定位失败时的临时兜底，不进入默认启动参数。
+- 梳理飞坡、隧道、起伏路段为行为树动作、速度限制或 Nav2 语义层规则。
 
-## 当前实施任务：无先验建图模式下的静态语义地形层
+## 已完成但需保持一致
 
-目标：在 `slam:=True` 建图模式、每次启动位姿基本一致的前提下，用固定 `map` 坐标多边形表达堡垒、梯形高地等危险地形，使普通规划默认避开高代价区域，目标在堡垒/高地上时仍可到达，同时将 43°坡设为不可通行障碍，并向下位机发布当前地形状态用于限速保护。
-
-### 任务拆分
-
-- [x] 新增 `terrain_semantic_zones.yaml`，用 `map` frame 多边形描述固定危险区域；先提供可运行模板和清晰注释，实车坐标后续由 RViz 标定填充。
-- [x] 在 `pb_nav2_plugins` 中实现 `SemanticPolygonLayer` costmap 插件：
-  - [x] 读取 `terrain_semantic_zones.yaml`。
-  - [x] 支持 `high_cost`、`lethal`、`slowdown` 等语义。
-  - [x] 将高地/堡垒写成高但非致命代价。
-  - [x] 将梯形高地 43°坡写成 `LETHAL_OBSTACLE`。
-  - [x] 支持 global/local rolling costmap，默认全窗口更新，且在 frame 一致时可按区域 bounds 收敛更新范围。
-- [x] 在 `pb_nav2_plugins` 中实现 `terrain_zone_monitor` 节点：
-  - [x] 读取同一份区域 YAML。
-  - [x] 通过 TF 查询机器人位置，结合圆形 footprint 采样判断所在区域。
-  - [x] 发布 `/sentry_terrain_state` 给下位机或上层逻辑。
-  - [x] 发布 RViz MarkerArray，用于检查语义区域是否与建图模式下的 `map` 坐标对齐。
-- [x] 接入 `pb2025_nav_bringup`：
-  - [x] 在 `nav2_params_mppi.yaml` 的 global/local costmap 加入 `terrain_semantic_layer`。
-  - [x] 在实车 bringup 或 navigation launch 中可选启动 `terrain_zone_monitor`。
-  - [x] 提供 launch 参数开关，避免影响不需要语义层的旧流程。
-- [x] 验证：
-  - [x] `colcon build --symlink-install --packages-select pb_nav2_plugins pb2025_nav_bringup`。
-  - [x] 静态检查 YAML/launch 路径真实存在。
-  - [x] 静态确认 43°坡使用 `lethal`，堡垒/高地使用 `high_cost`，避免目标在可达平台上时被 lethal 阻断。
-
-### 注意事项
-
-- 不修改 SLAM 生成的 `/map`；语义层作为额外 overlay 长期叠加。
-- 由于没有先验地图，区域多边形坐标依赖启动位姿一致性；每次启动后必须用 RViz marker 检查对齐。
-- 语义层只解决“规划偏好/可达性”，翻车保护仍需下位机或 `cmd_vel` limiter 使用 `/sentry_terrain_state` 限速、限加速度和限角速度。
-- 本次实现不改动 `combat_sentry_behavior` 中已有未提交变更。
+- `sentry_fusion` 负责 Livox 点云去畸变、Odin/Livox 点云融合和里程计适配，并发布 `registered_scan`、`lidar_odometry`、`odometry`。
+- `terrain_analysis` / `terrain_analysis_ext` 消费 `registered_scan`，发布 `terrain_map` / `terrain_map_ext`。
+- `pointcloud_to_laserscan` 在 SLAM 链路中把 `terrain_map_ext` 转成 `obstacle_scan`。
+- `navigation_launch.py` 启动 `terrain_analysis`、`terrain_analysis_ext`，并可选启动 `terrain_zone_monitor`。
+- `localization_launch.py` 加载 `map_server` 和 `lifecycle_manager_localization`，并支持同一个静态 `map -> odom` 兜底开关。
+- `slam_launch.py` 中原来的静态 `map -> odom` 发布已改为受 `publish_static_map_to_odom_tf` 控制。
