@@ -22,6 +22,29 @@ source install/setup.bash
 
 纯 launch、YAML、地图改动在 symlink install 下通常重启 launch 即可。
 
+## 快捷别名
+
+安装或刷新：
+
+```bash
+bash setup_nav_aliases.sh
+source ~/.bashrc
+```
+
+如果当前终端已经加载过旧 alias，要立刻覆盖当前 Bash 里的旧定义：
+
+```bash
+source setup_nav_aliases.sh
+```
+
+新增常用项：
+
+- `odinslam`：启动 `odin_slam_launch.py`。
+- `rviz`：单独启动 `rviz_launch.py`。
+- `navrviz`：启动实车导航并打开 RViz。
+- `mapsaver [地图名]` / `odinmapsaver [地图名]`：保存 ROS 栅格地图，默认 `rmuc2026`。
+- `saveodinmap` / `odinslam_savemap`：触发 Odin 内部 SLAM 地图保存。
+
 ## 启动下位机串口
 
 ```bash

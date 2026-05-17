@@ -79,6 +79,31 @@ source install/setup.bash
 
 ## 常用启动
 
+安装或刷新导航快捷别名：
+
+```bash
+cd /root/Combat_Sentry2026/sentry_nav_ws/src
+bash setup_nav_aliases.sh
+source ~/.bashrc
+```
+
+如果要让新别名立刻覆盖当前 Bash 里已经加载过的旧定义，直接 source 安装脚本：
+
+```bash
+source setup_nav_aliases.sh
+```
+
+常用别名：
+
+- `serial`：启动下位机串口。
+- `odin1`：启动 Odin1。
+- `odinslam`：启动 Odin SLAM 建图链路。
+- `nav`：启动实车导航主入口。
+- `navrviz`：启动实车导航主入口并打开 RViz。
+- `rviz`：单独启动 `pb2025_nav_bringup/rviz_launch.py`。
+- `mapsaver [地图名]` / `odinmapsaver [地图名]`：保存 ROS 栅格地图到 `pb2025_nav_bringup/map/reality/<地图名>`，默认 `rmuc2026`。
+- `saveodinmap` / `odinslam_savemap`：触发 Odin 内部 SLAM 地图保存，默认输出到 `odin_ros_driver/map/odin_relocalization_map.bin`。
+
 启动下位机串口：
 
 ```bash
